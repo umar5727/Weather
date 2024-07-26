@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-image: url('../../public/cloudy.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* backdrop-filter: blur(2px); */
+    /* background-color: black; */
+}
