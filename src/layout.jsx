@@ -1,21 +1,10 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 
-const layout = ({ children }) => {
+const Layout = () => {
     return (
-        // <>
-        //     <LocationContextProvider>
-
-
-        //         {/* <Header /> */}
-
-        //         <div>
-
-        //             {children}
-        //         </div>
-        //     </LocationContextProvider>
-        // </>
-        <></>
+        <Outlet />
     )
 }
 
-export default layout
+export default Layout

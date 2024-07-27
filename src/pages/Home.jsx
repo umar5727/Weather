@@ -4,11 +4,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloud, faSearch, faSun } from '@fortawesome/free-solid-svg-icons'
 import { motion } from 'framer-motion'
 import LocationContext from '../context/LocationContext'
+import { Link } from 'react-router-dom'
+import Form from './Form'
+import useAllPlaces from '../hooks/useAllPlaces'
+
+
 
 
 function Home() {
-
     const { general, setGeneral } = useContext(LocationContext)
+    const { cityData, setCityData } = useContext(LocationContext)
+    console.log('\n cityData: ', cityData)
+    const { errors, responseResult } = useAllPlaces()
+    console.log(errors)
+
+    console.log(responseResult)
+
+
+
+
 
     const [search, setSearch] = useState('')
     const handleChange = (event) => {
@@ -34,6 +48,7 @@ function Home() {
             const locationData = { temp_c, temp_f, last_updated, name, region, cloud }
 
             setGeneral(locationData)
+            setCityData(null)
         } catch (error) {
             console.error(error);
         }
@@ -71,14 +86,29 @@ function Home() {
             console.error(error);
         }
     }
+
+    //addplace starts
+
+    const addPlaceClick = async (e) => {
+        e.preventDefault();
+        // AddPlace()
+    }
+
     useEffect(() => {
         if (!general.name) {
             defaultSearch(0)
         }
+
+
     }, [general])
 
+    useEffect(() => {
+        console.log(responseResult)
+    }, [responseResult])
     return (
-        <main>
+        <main className='py-5 '>
+
+
             <div className="flex flex-col justify-center items-center w-screen h-screen px-20 gap-5 text-white">
                 <section className="relative w-96">
                     <form onSubmit={handleClick} >
@@ -93,6 +123,7 @@ function Home() {
                             type='submit'
                             className="group bg-blue-700 h-full px-4 rounded-e-md absolute right-0 top-0"
                             whileTap={{ scale: 0.9 }}
+
                         // onClick={handleClick}
 
                         >
@@ -123,19 +154,20 @@ function Home() {
                             {/* date ends  */}
                         </div>
                         {/* left ends  */}
-                        <div className='flex flex-col justify-center items-center absolute  top-40 left-56'>
+                        <div className='flex flex-col justify-center items-center absolute  top-36 left-56'>
 
                             <FontAwesomeIcon icon={faCloud} className={`${className} h-40 aspect-video z-40 `} />
                             {
-                                general.cloud < 50 ?
-                                    <img src="sun-icon.svg" alt="" className='w-40 absolute -top-16 right-0' />
+                                general.cloud < 60 ?
+                                    // <img src="sun-icon.svg" alt="" className='w-40 absolute -top-10 right-0' />
+                                    ''
                                     :
-                                    <FontAwesomeIcon icon={faCloud} className={`${className} h-28 absolute -top-6 right-0`} />
+                                    <FontAwesomeIcon icon={faCloud} className={`${className} h-28 absolute -top-2 right-0`} />
                             }
-                            <div className='text-lg font-semibold capitalize text-center'>
+                            <div className='text-lg font-bold capitalize text-center'>
 
                                 {
-                                    general.cloud < 50 ? 'Clear' : 'cloudy'
+                                    general.cloud < 60 ? 'Clear' : 'cloudy'
                                 }
                             </div>
                         </div>
@@ -149,7 +181,7 @@ function Home() {
                                     <div className='text-lg font-bold absolute top-0 right-0 '>F</div>
                                 </div>
                             </div>
-                            <div className='flex-grow flex justify-center items-center leading-none text-[150px] '>
+                            <div className='flex-grow flex justify-center items-end leading-none text-[150px] '>
                                 <div className='relative pr-5 tracking-tight'>
 
                                     {general.temp_c}
@@ -165,35 +197,48 @@ function Home() {
 
                 </section>
                 {/* main section ends  */}
-                <section className="">
-                    <div className='flex justify-center text-2xl  '>
-                        <h2 className='text-black font-bold bg-blue-400/20 py-4 px-20 rounded-lg backdrop-filter backdrop-blur-sm w-fit shadow-lg'>
+                <section className="w-full">
+                    <div className='flex justify-center text-2xl  mb-2'>
+                        <h2 className='text-black font-bold bg-blue-400/20 py-4 px-20 rounded-lg backdrop-filter backdrop-blur-sm w-fit shadow-lg hover:bg-green-400/20 '>
 
                             Explore Tourist Places in {general.name}
                         </h2>
+
                     </div>
-                    <div className='grid grid-cols-5 w-full'>
+                    <div className='grid grid-cols-5 w-full gap-10 items-center'>
 
 
-                        <div className=" bg-blue-500/10 backdrop-filter backdrop-blur-md  border border-blue-600/20 aspect-video rounded-md p-5 flex flex-col justify-center items-center shadow-xl ">
-                            {/* <img src="rainy.jpg" alt="" /> */}
-                            <div className=" w-full h-full text-white ">
-                                <h3 className='text-xl font-bold text-center'>
+                        {
+                            cityData?.map((field) => (
 
-                                    first
-                                </h3>
-                                <div>
-                                    <p className='text-lg' >
-                                        this is beautifull place to visite
-                                    </p>
+                                <div
+                                    className="h-fit w-full bg-blue-500/10 backdrop-filter backdrop-blur-md  border border-blue-600/20  rounded-md  flex flex-col justify-center items-center shadow-xl  "
+                                    key={field.placeName}
+                                >
+                                    <img src={field.placeImage} alt="" />
+                                    <div className="  h-full text-white text-xl font-bold capitalize py-2">
+                                        {field.placeName}
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            ))
+
+                        }
                         {/* first card ends */}
+                        <motion.button
+
+                            className='text-black text-2xl font-bold bg-blue-400/20 py-4 w-full rounded-lg backdrop-filter backdrop-blur-sm shadow-lg h-fit self-center hover:bg-green-400/20'
+                            whileTap={{ scale: 0.9 }}
+                            onClick={addPlaceClick}
+                        >
+                            {/* <Link to='#'> */}
+                            Add Place
+                            {/* </Link> */}
+                        </motion.button>
                     </div>
                 </section>
-            </div >
 
+            </div >
+            <Form />
         </main>
 
 

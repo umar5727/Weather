@@ -12,7 +12,7 @@ const LocationContextProvider = ({ children }) => {
     })
     const [cityData, setCityData] = useState()
     return (
-        <LocationContext.Provider value={{ general, setGeneral }}>
+        <LocationContext.Provider value={{ general, setGeneral, cityData, setCityData }}>
 
             {children}
 

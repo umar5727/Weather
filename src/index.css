@@ -3,10 +3,11 @@
 @tailwind utilities;
 
 body {
-    background-image: url('../../public/cloudy.jpg');
+    background-image: url('/cloudy.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    /* backdrop-filter: blur(2px); */
-    /* background-color: black; */
+    width: 100%;
+    min-height: 100vh;
+
 }
